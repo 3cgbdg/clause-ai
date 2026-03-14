@@ -4,7 +4,7 @@
     "eslint --fix"
   ],
   "backend/**/*.py": [
-    "ruff format",
-    "ruff check --fix"
+    "backend/.venv/Scripts/python -m ruff format",
+    "backend/.venv/Scripts/python -m ruff check --fix"
   ]
 }
