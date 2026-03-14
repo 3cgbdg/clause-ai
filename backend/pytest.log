@@ -1,0 +1,182 @@
+D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:208: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-8.3.4, pluggy-1.6.0
+rootdir: D:\miliondollarbabu\1\backend
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-0.24.0
+asyncio: mode=Mode.AUTO, default_loop_scope=None
+collected 11 items
+
+tests\test_analyze.py ......FF                                           [ 72%]
+tests\test_pdf_service.py ...                                            [100%]
+
+================================== FAILURES ===================================
+_____________ TestAnalyzeEndpoint.test_rate_limiting_returns_429 ______________
+
+self = <tests.test_analyze.TestAnalyzeEndpoint object at 0x000002083785AF10>
+client = <httpx.AsyncClient object at 0x0000020837A94E20>
+
+    async def test_rate_limiting_returns_429(self, client: AsyncClient) -> None:
+        # Send 5 valid requests
+        for _ in range(5):
+            res = await client.post("/api/analyze", json={"text": "This is a dummy contract over 50 characters long so the length validation passes."})
+>           assert res.status_code == 200
+E           assert 429 == 200
+E            +  where 429 = <Response [429 Too Many Requests]>.status_code
+
+tests\test_analyze.py:97: AssertionError
+---------------------------- Captured stderr setup ----------------------------
+INFO:slowapi:Storage has been reset and all limits cleared
+----------------------------- Captured log setup ------------------------------
+INFO     slowapi:extension.py:360 Storage has been reset and all limits cleared
+---------------------------- Captured stderr call -----------------------------
+WARNING:slowapi:ratelimit 5 per 1 minute (127.0.0.1) exceeded at endpoint: /api/analyze
+INFO:httpx:HTTP Request: POST http://test/api/analyze "HTTP/1.1 429 Too Many Requests"
+------------------------------ Captured log call ------------------------------
+WARNING  slowapi:extension.py:510 ratelimit 5 per 1 minute (127.0.0.1) exceeded at endpoint: /api/analyze
+INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/analyze "HTTP/1.1 429 Too Many Requests"
+_________ TestAnalyzeEndpointPdfUpload.test_non_pdf_file_returns_400 __________
+
+self = <tests.test_analyze.TestAnalyzeEndpointPdfUpload object at 0x000002083790B250>
+client = <httpx.AsyncClient object at 0x0000020837A96470>
+
+    async def test_non_pdf_file_returns_400(self, client: AsyncClient) -> None:
+        import io
+        fake_file = io.BytesIO(b"not a pdf")
+        response = await client.post(
+            "/api/analyze",
+            files={"file": ("test.txt", fake_file, "text/plain")},
+        )
+>       assert response.status_code == 400
+E       assert 429 == 400
+E        +  where 429 = <Response [429 Too Many Requests]>.status_code
+
+tests\test_analyze.py:111: AssertionError
+---------------------------- Captured stderr setup ----------------------------
+INFO:slowapi:Storage has been reset and all limits cleared
+----------------------------- Captured log setup ------------------------------
+INFO     slowapi:extension.py:360 Storage has been reset and all limits cleared
+---------------------------- Captured stderr call -----------------------------
+WARNING:slowapi:ratelimit 5 per 1 minute (127.0.0.1) exceeded at endpoint: /api/analyze
+INFO:httpx:HTTP Request: POST http://test/api/analyze "HTTP/1.1 429 Too Many Requests"
+------------------------------ Captured log call ------------------------------
+WARNING  slowapi:extension.py:510 ratelimit 5 per 1 minute (127.0.0.1) exceeded at endpoint: /api/analyze
+INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/analyze "HTTP/1.1 429 Too Many Requests"
+============================== warnings summary ===============================
+.venv\Lib\site-packages\openai\_compat.py:48
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    from pydantic.v1.typing import (
+
+.venv\Lib\site-packages\slowapi\extension.py:717
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\slowapi\extension.py:717: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    if asyncio.iscoroutinefunction(func):
+
+.venv\Lib\site-packages\fastapi\routing.py:233
+.venv\Lib\site-packages\fastapi\routing.py:233
+.venv\Lib\site-packages\fastapi\routing.py:233
+.venv\Lib\site-packages\fastapi\routing.py:233
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\fastapi\routing.py:233: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    is_coroutine = asyncio.iscoroutinefunction(dependant.call)
+
+.venv\Lib\site-packages\starlette\_utils.py:39: 8 warnings
+tests/test_analyze.py: 8 warnings
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\starlette\_utils.py:39: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    return asyncio.iscoroutinefunction(obj) or (callable(obj) and asyncio.iscoroutinefunction(obj.__call__))
+
+.venv\Lib\site-packages\pytest_asyncio\plugin.py:179: 417 warnings
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:179: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    return asyncio.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj)
+
+.venv\Lib\site-packages\pytest_asyncio\plugin.py:450: 11 warnings
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:450: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    return asyncio.iscoroutinefunction(func)
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:1056: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    return asyncio.get_event_loop_policy()
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:773: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    _restore_event_loop_policy(asyncio.get_event_loop_policy()),
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:1028: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    asyncio.set_event_loop_policy(new_loop_policy)
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:1029: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:788: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    policy = asyncio.get_event_loop_policy()
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:833: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    policy = asyncio.get_event_loop_policy()
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:857: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    asyncio.set_event_loop_policy(previous_policy)
+
+tests/test_analyze.py::TestHealthEndpoint::test_health_returns_ok
+tests/test_analyze.py::TestAnalyzeEndpoint::test_empty_text_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_short_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_text_too_long_returns_422
+tests/test_analyze.py::TestAnalyzeEndpoint::test_valid_text_returns_sse_stream
+tests/test_analyze.py::TestAnalyzeEndpoint::test_no_input_returns_400
+tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+  D:\miliondollarbabu\1\backend\.venv\Lib\site-packages\pytest_asyncio\plugin.py:869: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    policy = asyncio.get_event_loop_policy()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_analyze.py::TestAnalyzeEndpoint::test_rate_limiting_returns_429
+FAILED tests/test_analyze.py::TestAnalyzeEndpointPdfUpload::test_non_pdf_file_returns_400
+================== 2 failed, 9 passed, 507 warnings in 0.42s ==================
