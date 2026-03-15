@@ -1,7 +1,9 @@
 import { useState, useCallback, useRef } from 'react';
+import { useUser } from '@clerk/clerk-react';
 import type { AnalysisState } from '../types';
 
 export const useAnalyzeContract = () => {
+  const { user } = useUser();
   const [state, setState] = useState<AnalysisState>({
     status: 'idle',
     summary: '',
@@ -35,8 +37,12 @@ export const useAnalyzeContract = () => {
         throw new Error('Please provide either text or a PDF file.');
       }
 
+      const headers: Record<string, string> = {};
+      if (user?.id) headers['X-User-Id'] = user.id;
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
         method: 'POST',
+        headers,
         body: formData,
         signal: abortControllerRef.current.signal,
       });
@@ -102,21 +108,20 @@ export const useAnalyzeContract = () => {
           }
         }
       }
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+    } catch (err: unknown) {
+      if ((err as Error).name === 'AbortError') {
          console.log('Analysis aborted');
       } else {
          setState(prev => ({
            ...prev,
            status: 'error',
-           error: err.message || 'An unexpected error occurred.',
+           error: (err as Error).message || 'An unexpected error occurred.',
          }));
       }
     } finally {
-      // Ensure we clean up controller
       abortControllerRef.current = null;
     }
-  }, []);
+  }, [user?.id]);
 
   const reset = useCallback(() => {
     if (abortControllerRef.current) {

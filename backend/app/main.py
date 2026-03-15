@@ -12,7 +12,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.rate_limit import limiter
-from app.routers import analyze, health
+from app.routers import analyze, health, history
 from app.services.ai_service import get_client
 
 logging.basicConfig(level=logging.INFO)
@@ -44,10 +44,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-User-Id"],
 )
 
-# Routers
 app.include_router(health.router, prefix="/api")
 app.include_router(analyze.router, prefix="/api")
+app.include_router(history.router, prefix="/api")

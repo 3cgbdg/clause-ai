@@ -8,6 +8,7 @@ export interface AnalysisResult {
   attention_score: number;
   score_label: string;
   contract_type: string;
+  summary?: string;
   key_points: string[];
   red_flags: RedFlag[];
 }

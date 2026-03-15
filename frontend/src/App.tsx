@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import Landing from './pages/Landing';
 import Pricing from './pages/Pricing';
 import Analyzer from './pages/Analyzer';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/analyze" element={<Analyzer />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
         
